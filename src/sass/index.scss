@@ -1,0 +1,22 @@
+@import "sprite.scss";
+@import "base.scss";
+$page:#fff;
+$title:#202020;
+$title-sub:#848484;
+.container {
+    position: relative;
+    max-width: 1200px;
+    background-color: #eee;
+    .logo {
+        @include sprite($logo);
+        z-index: 99;
+    }
+    .row {
+      .col {
+        @include sprite($kefu);
+        text-indent: -99999em;
+        margin-left: 10px;
+        margin-bottom: 10px;
+      }
+    }
+}

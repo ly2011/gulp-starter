@@ -23,25 +23,57 @@ var path = require("path"),
   revCollector = require("gulp-rev-collector"),
   sass = require("gulp-sass"),
   filter = require("gulp-filter"),
-  sourcemaps = require("gulp-sourcemaps");
+  sourcemaps = require("gulp-sourcemaps"),
+  merge = require('merge-stream');
 
 var condition = true;
+var is_pc = true;
 
 // 目标目录清理
 gulp.task("clean", function() {
+  var clearSrc = '';
+  if (condition) {
+    clearSrc = 'dist';
+  } else {
+    if (is_pc) {
+      clearSrc = 'dist/pc'
+    } else {
+      clearSrc = 'dist/wap'
+    }
+  }
   return gulp
-    .src(["dist"], { read: false })
+    .src([clearSrc], { read: false })
     .pipe(clean({ force: true }))
     .on("error", swallowError);
 });
+
 //字体复制
-var fontSrc = "src/font/*.ttf", fontDest = "dist/font";
+
 gulp.task("font", function() {
-  gulp.src(fontSrc).pipe(gulp.dest(fontDest));
+  var fontSrc = "", fontDest = "";
+  if (condition) {
+    var fontArr = ["pc", 'wap'];
+    var tasks = fontArr.map(function(item) {
+      return gulp.src('src/' + item + '/font/*.ttf')
+      .pipe(gulp.dest('dist/' + item + '/font'))
+    });
+    return merge(tasks);
+  } else {
+    if (is_pc) {
+      fontSrc = 'src/pc/font/*.ttf';
+      fontDest = 'dist/pc/font';
+    } else {
+      fontSrc = 'src/wap/font/*.ttf';
+      fontDest = 'dist/wap/font'
+    }
+    return gulp.src(fontSrc).pipe(gulp.dest(fontDest));
+  }
+
 });
-var htmlSrc = "src/*.html", htmlDest = "dist";
+
 //公用html
 gulp.task("fileinclude", function() {
+  var htmlSrc = "src/*.html", htmlDest = "dist";
   gulp
     .src(htmlSrc)
     .pipe(
@@ -55,6 +87,7 @@ gulp.task("fileinclude", function() {
 });
 // HTML处理
 gulp.task("html", function() {
+  var htmlSrc = "src/*.html", htmlDest = "dist";
   var options = {
     removeComments: true, //清除HTML注释
     collapseWhitespace: false, //压缩HTML
@@ -220,6 +253,19 @@ gulp.task("default", function() {
     "watch"
   );
 });
+gulp.task("dev_mobile", function() {
+  condition = false;
+  is_pc = false;
+  // runSequence('clean', 'sprite', 'images', ['sass', 'uglifyjs', 'html'], 'rev', 'browser-sync', 'watch')
+  runSequence(
+    "sprite",
+    "images",
+    "font",
+    ["sass", "uglifyjs", "html"],
+    "browser-sync",
+    "watch"
+  );
+});
 //线上自动部署
 gulp.task("build", function() {
   runSequence(
@@ -237,6 +283,7 @@ gulp.task("build", function() {
 // gulp.task('sync',['browser-sync']);
 //监听任务
 gulp.task("watch", function() {
+  var htmlSrc = "src/*.html", htmlDest = "dist";
   // 监听html
   gulp.watch(htmlSrc, ["html"]).on("change", browserSync.reload);
 

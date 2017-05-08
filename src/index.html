@@ -1,20 +1,29 @@
-@@include('header.html')
-<link rel="stylesheet" href="./css/index.css">
-<div class="container">
-  <div class="header">
-    <div class="logo"></div>
-  </div>
-  <div class="row">
-    <div class="col">.col1</div>
-    <div class="col">.col2</div>
-    <div class="col">.col3</div>
-    <div class="col">.col4</div>
-    <div class="col">.col5</div>
-    <div class="col">.col6</div>
-    <div class="col">.col7</div>
-    <div class="col">.col8</div>
-    <div class="col">.col9</div>
-    <div class="col">.col10</div>
-  </div>
-</div>
-@@include('footer.html')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="format-detection" content="address=no;">
+    <meta name="msapplication-tap-highlight" content="no" />
+    <title>友德医网络医院</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) { //判断iPhone|iPad|iPod|iOS
+        window.location.href = './wap/warpindex.html';
+    } else if (/(Android)/i.test(navigator.userAgent)) { //判断Android
+        window.location.href = './wap/warpindex.html';
+    } else { //pc
+        window.location.href = "./pc/html/index.html";
+    };
+    </script>
+</body>
+
+</html>

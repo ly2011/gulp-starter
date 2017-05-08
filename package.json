@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "luyun",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
-    "gulp", "luyun"
+    "gulp",
+    "luyun"
   ],
   "author": "luyun",
   "license": "ISC",

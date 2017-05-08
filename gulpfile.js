@@ -184,6 +184,10 @@ gulp.task("rev", function() {
 //browser-sync同步测试
 gulp.task("browser-sync", function() {
   browserSync.init({
+    open: true,
+    notify: false,
+    port: 8000,
+    browser: "chrome",
     server: {
       baseDir: "dist"
     }

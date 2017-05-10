@@ -24,7 +24,8 @@ var path = require("path"),
   sass = require("gulp-sass"),
   filter = require("gulp-filter"),
   sourcemaps = require("gulp-sourcemaps"),
-  merge = require("merge-stream");
+  merge = require("merge-stream"),
+  sftp = require('gulp-sftp');
 
 var condition = true;
 var is_pc = true;
@@ -223,7 +224,7 @@ gulp.task("sass", function() {
           .on("error", swallowError)
           .pipe(gulp.dest(sassDest))
           // .pipe(changed(cssDest))
-          .pipe(cleanCSS({ compatibility: "ie8" }))
+          // .pipe(cleanCSS({ compatibility: "ie8" }))
           .on("error", swallowError)
           .pipe(gulpif(condition, rev()))
           .pipe(gulp.dest(cssDest))
@@ -259,7 +260,7 @@ gulp.task("sass", function() {
         .on("error", swallowError)
         .pipe(gulp.dest(sassDest))
         // .pipe(changed(cssDest))
-        .pipe(cleanCSS({ compatibility: "ie8" }))
+        // .pipe(cleanCSS({ compatibility: "ie8" }))
         .on("error", swallowError)
         .pipe(gulpif(condition, rev()))
         .pipe(gulp.dest(cssDest))
@@ -275,7 +276,7 @@ gulp.task("css", function() {
       .src(cssSrc)
       .pipe(plumber())
       .pipe(changed(cssDest))
-      .pipe(cleanCSS({ compatibility: "ie8" }))
+      // .pipe(cleanCSS({ compatibility: "ie8" }))
       .on("error", swallowError)
       // .pipe(rename({ suffix: '.min' }))
       .pipe(gulp.dest(cssDest)) );
@@ -288,7 +289,7 @@ gulp.task("uglifyjs", function() {
     var jsArr = ["pc", "wap"];
     var tasks = jsArr.map(function(item) {
       return (gulp
-          .src("src/" + item + "/pc/**/*.js")
+          .src("src/" + item + "/**/*.js")
           .pipe(plumber())
           // .pipe(gulpif(!condition, changed(jsDest)))
           // .pipe(rename({ suffix: '.min' }))
@@ -296,7 +297,7 @@ gulp.task("uglifyjs", function() {
           .pipe(gulpif(condition, uglify()))
           .pipe(gulpif(condition, rev()))
           .on("error", swallowError)
-          .pipe(gulp.dest("dist/" + item + "/pc/js"))
+          .pipe(gulp.dest("dist/" + item + "/js"))
           .pipe(gulpif(condition, rev.manifest()))
           .pipe(gulpif(condition, gulp.dest("dist/" + item + "/rev/js")))
           .pipe(browserSync.stream()) );
@@ -432,9 +433,9 @@ gulp.task("sprite", function() {
   }
 });
 
-var totalRev = "dist/rev/**/*.json",
-  totalHtml = "dist/*.html",
-  revDest = "dist";
+// var totalRev = "dist/rev/**/*.json",
+//   totalHtml = "dist/*.html",
+//   revDest = "dist";
 gulp.task("rev", function() {
   var totalRev = "", totalHtml = "", revDest = "";
   if (condition) {
@@ -466,6 +467,14 @@ gulp.task("rev", function() {
       .on("error", swallowError)
       .pipe(gulp.dest(revDest));
   }
+});
+
+gulp.task('ftp', function () {
+  return gulp.src('dist').pipe(sftp({
+    host: 'dev-hospital.youdeyi.com',
+    user: 'meizi',
+    pass: '123456'
+  }));
 });
 
 //browser-sync同步测试
